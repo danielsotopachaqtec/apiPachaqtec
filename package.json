@@ -1,0 +1,25 @@
+{
+  "name": "apipachaqtec",
+  "version": "1.0.0",
+  "description": "api for mobile app with nodejs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielsotopachaqtec/apiPachaqtec.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "Daniel Soto <dasg.1993@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danielsotopachaqtec/apiPachaqtec/issues"
+  },
+  "homepage": "https://github.com/danielsotopachaqtec/apiPachaqtec#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
