@@ -2,11 +2,18 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan')
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const port = 3000;
 
 const productRoutes = require('./api/routes/products')
 const orderRoutes = require('./api/routes/orders')
+
+mongoose.connect(`mongodb+srv://${process.env.MONGO_ATLAS_USER}:${process.env.MONGO_ATLAS_PW}${process.env.MONGO_ATLAS_URL}`,
+{
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({
