@@ -8,7 +8,7 @@ const OrderSchema  = mongoose.Schema({
     location: String,
     totalPrice: Number,
     user: String,
-    userId: String
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 module.exports = mongoose.model('Order', OrderSchema);
