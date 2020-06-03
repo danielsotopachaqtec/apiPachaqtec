@@ -6,7 +6,7 @@ const userSchema = mongoose.Schema({
     email: { type: String, required: true, match: Utils.validator.formatEmail },
     password: { type: String, required: true},
     phoneNumber: { type: String, required: true, unique: true},
-    jobProfile : { type: String, required: true},
-});
+    role : { type: String, default: 'user',enum: ['user', 'admin', 'superadmin']}
+}, { timestamps: { createdAt: 'createdAt' } });
 
 module.exports = mongoose.model('User', userSchema);

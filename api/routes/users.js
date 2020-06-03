@@ -15,7 +15,12 @@ router.post('/signin', (req,res,next) => {
                 errors: true,
                 message: 'Phone number not found!, user doesn\t exist'
             })
-        } else {
+        } else if(user[0].role !== req.body.role){
+            return res.status(403).json({
+                errors: true,
+                message: 'Please make sure you are logging in from the right portal.'
+            })
+        }else {
             bcrypt.compare(req.body.password, user[0].password, (err,result) => {
                 if(err){
                     return res.status(401).json({
@@ -27,7 +32,9 @@ router.post('/signin', (req,res,next) => {
                     const token = jwt.sign(
                         {
                             phoneNumber: user[0].phoneNumber,
-                            userId: user[0]._id
+                            userId: user[0]._id,
+                            role: user[0].role,
+                            email: user[0].email
                         }, process.env.JWT_KEY,
                         {
                             expiresIn: "1h"
@@ -79,7 +86,8 @@ router.post('/signup', (req,res, next) => {
                             _id: new mongoose.Types.ObjectId(),
                             email: req.body.email,
                             password: hash,
-                            phoneNumber: req.body.phoneNumber
+                            phoneNumber: req.body.phoneNumber,
+                            role: req.body.role
                         });
                         user
                         .save()
