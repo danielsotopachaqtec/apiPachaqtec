@@ -28,6 +28,12 @@ router.post('/signin', (req,res,next) => {
                         message: 'Auth failed!'
                     })
                 }
+                if(user[0].email !== req.body.email){
+                    return res.status(401).json({
+                        errors: true,
+                        message: 'Auth failed!'
+                    })
+                }
                 if(result){
                     const token = jwt.sign(
                         {
