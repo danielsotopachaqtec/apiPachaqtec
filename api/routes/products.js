@@ -9,7 +9,12 @@ const uploadImages = require('../../functions/uploadImage')
 // Handle incoming GET requests to /products
 router.get('/', ProductController.getAllProduct);
 
-router.post('/', uploadImages.upload.single('productImage'), checkAuth, checkRole(process.env.ROLE_ADMIN), ProductController.createProduct)
+router.post('/', uploadImages.upload.fields([{
+    name: 'imagesProducts',
+    maxCount: 8,
+}, {
+    name: 'productImage'
+}]), checkAuth, checkRole(process.env.ROLE_ADMIN), ProductController.createProduct)
 
 router.get('/:productId', ProductController.getProductById)
 

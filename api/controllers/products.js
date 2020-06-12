@@ -1,5 +1,6 @@
 const Product = require('../models/product')
 const mongoose = require('mongoose')
+const convertArrayToObject = require('../../functions/utils')
 
 exports.getAllProduct = (req,res,next) => {
     Product.find()
@@ -43,17 +44,29 @@ exports.getAllProduct = (req,res,next) => {
 }
 
 exports.createProduct = (req, res, next) => {
+    const path = req.files.imagesProducts.map((file,index, arr)=> (
+            { url: file.path }
+    ))
+    console.log('path', path)
+        
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        productImage: req.file.path,
+        productImage: req.files.productImage[0].path,
+        imageBrand: req.body.imageBrand,
+        imagesProducts: path,
+        colors: req.body.colors,
+        color:  req.body.color,
         price: req.body.price,
         qty: req.body.qty,
         description: req.body.description,
         category: req.body.category,
-        sale: req.body.sale
+        sale: req.body.sale,
     })
-    product.save().then(result => {
+    console.warn('product productImage', product)
+    product.save()
+    .then(result => {
+        
         console.log(result);
         res.status(201).json({
             message: 'Handling POST request to /products',
