@@ -11,6 +11,7 @@ exports.getAllProduct = (req,res,next) => {
                 count: docs.length,
                 message: "Handling GET request to /order",
                 data: docs.map(doc => {
+                    console.log('doc.productImage', doc.productImage)
                     return{
                         _id: doc.id,
                         name: doc.name,
@@ -20,6 +21,10 @@ exports.getAllProduct = (req,res,next) => {
                         description: doc.description,
                         category: doc.category,
                         sale: doc.sale,
+                        _id: new mongoose.Types.ObjectId(),
+                        imagesProducts: doc.imagesProducts,
+                        colors: doc.colors,
+                        color:  doc.color,
                         request: {
                             type: 'GET',
                             url: 'http://localhost:3000/products/' + doc.id 
@@ -44,17 +49,20 @@ exports.getAllProduct = (req,res,next) => {
 }
 
 exports.createProduct = (req, res, next) => {
-    const path = req.files.imagesProducts.map((file,index, arr)=> (
-            { url: file.path }
-    ))
-    console.log('path', path)
+    console.log('req', req)
+    const endpoint = `${req.protocol}://${req.headers.host}/`
+    const imagesProducts = req.files.imagesProducts.map((file,index, arr)=> {
+            return { url: `${endpoint}${file.path}` } 
+})
+    console.log('imagesProducts', imagesProducts)
+    console.log('req.body.colors', req.body.colors)
         
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        productImage: req.files.productImage[0].path,
+        productImage: `${endpoint}${req.files.productImage[0].path}`,
         imageBrand: req.body.imageBrand,
-        imagesProducts: path,
+        imagesProducts: imagesProducts,
         colors: req.body.colors,
         color:  req.body.color,
         price: req.body.price,
@@ -63,7 +71,6 @@ exports.createProduct = (req, res, next) => {
         category: req.body.category,
         sale: req.body.sale,
     })
-    console.warn('product productImage', product)
     product.save()
     .then(result => {
         

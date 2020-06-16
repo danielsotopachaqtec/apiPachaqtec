@@ -3,6 +3,7 @@ const app = express();
 const morgan = require('morgan')
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const path = require('path')
 
 const port = 3000;
 
@@ -47,6 +48,8 @@ app.use((req,res,next)=> {
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
 app.use('/users', userRoutes);
+
+app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use((req,res,next)=> {
     const error = new Error('Not found!');
     error.status = 404;

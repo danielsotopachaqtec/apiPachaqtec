@@ -6,7 +6,6 @@ const colorSchema = mongoose.Schema({
 })
 
 const imagesProducts = mongoose.Schema({
-    id: { type: String, require: true},
     url: { type: String, require: true}
 })
 
@@ -16,7 +15,7 @@ const productSchema  = mongoose.Schema({
     productImage: {type: String, require: true},
     imageBrand: {type: String, require: true},
     colors:[colorSchema],
-    imagesProducts: [imagesProducts],
+    imagesProducts: [{}],
     color:  {type: String, require: true},
     price: {type: String, require: true},
     qty: {type: Number, require: true},

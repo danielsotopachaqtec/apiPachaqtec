@@ -10,10 +10,10 @@ const uploadImages = require('../../functions/uploadImage')
 router.get('/', ProductController.getAllProduct);
 
 router.post('/', uploadImages.upload.fields([{
+    name: 'productImage'
+}, {
     name: 'imagesProducts',
     maxCount: 8,
-}, {
-    name: 'productImage'
 }]), checkAuth, checkRole(process.env.ROLE_ADMIN), ProductController.createProduct)
 
 router.get('/:productId', ProductController.getProductById)
