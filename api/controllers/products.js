@@ -13,7 +13,7 @@ exports.getAllProduct = (req,res,next) => {
                 data: docs.map(doc => {
                     console.log('doc.productImage', doc.productImage)
                     return{
-                        _id: doc.id,
+                        _id: doc._id,
                         name: doc.name,
                         productImage: doc.productImage,
                         price: doc.price,
@@ -21,13 +21,12 @@ exports.getAllProduct = (req,res,next) => {
                         description: doc.description,
                         category: doc.category,
                         sale: doc.sale,
-                        _id: new mongoose.Types.ObjectId(),
                         imagesProducts: doc.imagesProducts,
                         colors: doc.colors,
                         color:  doc.color,
                         request: {
                             type: 'GET',
-                            url: 'http://localhost:3000/products/' + doc.id 
+                            url: 'http://localhost:3000/products/' + doc._id 
                         }
                     }
                 })

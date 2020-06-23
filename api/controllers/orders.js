@@ -1,22 +1,28 @@
 const Order = require('../models/orders')
+const Product = require('../models/product')
 const mongoose = require('mongoose')
 
 exports.getAllOrder = (req,res,next) => {
     Order.find()
-    .select('_id product quantity')
     .populate('product')
+    .populate('userId')
     .exec()
     .then(docs => {
-        console.log('doc', docs)
+        console.log('docs', docs)
         if(docs.length >= 0){
         res.status(200).json({
             count: docs.length,
             message: "Handling GET request to /order",
             data: docs.map(doc => {
                 return{
-                    _id: doc.id,
+                    _id: doc._id,
+                    details: doc.details,
                     product: doc.product,
                     quantity: doc.quantity,
+                    details: doc.details,
+                    location: doc.location,
+                    totalPrice: doc.totalPrice,
+                    userId: doc.userId,
                     request: {
                         type: 'GET',
                         url: 'http://localhost:3000/orders/' + doc.id 
@@ -43,7 +49,7 @@ exports.getAllOrder = (req,res,next) => {
 exports.createOrder = (req, res, next) => {
     const order =  new Order ({
         _id: mongoose.Types.ObjectId(),
-        product: req.body.productId,
+        product: req.body.product,
         quantity: req.body.quantity,
         details: req.body.details,
         location: req.body.location,
@@ -51,13 +57,21 @@ exports.createOrder = (req, res, next) => {
         user: req.body.user,
         userId: req.body.userId
     })
+    
     order
         .save()
         .then((result) => {
             console.log(result);
             res.status(201).json({
                 message: 'Handling POST request to /order',
-                data: result,
+                _id: mongoose.Types.ObjectId(),
+                product: result.product,
+                quantity: result.quantity,
+                details: result.details,
+                location: result.location,
+                totalPrice: result.totalPrice,
+                user: result.user,
+                userId: result.userId,
                 request: {
                     type: 'GET',
                     url: 'http://localhost:3000/orders/' + result._id 
@@ -76,13 +90,21 @@ exports.getOrderById = (req,res,next) => {
     const id = req.params.orderId;
     Order.findById(id)
     .populate('product')
+    .populate('userId')
     .exec()
     .then(doc=> {
         console.log(doc)
         if(doc){
             res.status(200).json({
                 message: 'Handling GET request to /:orderId',
-                data: doc,
+                _id: doc._id,
+                details: doc.details,
+                product: doc.product,
+                quantity: doc.quantity,
+                details: doc.details,
+                location: doc.location,
+                totalPrice: doc.totalPrice,
+                userId: doc.userId,
                 request: {
                     type: 'GET',
                     url: 'http://localhost:3000/orders/' 

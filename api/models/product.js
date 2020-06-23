@@ -1,11 +1,13 @@
 const mongoose = require('mongoose')
 
 const colorSchema = mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
     color:  {type: String, require: true},
     stock: {type: Number, require: true},
 })
 
 const imagesProducts = mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
     url: { type: String, require: true}
 })
 
