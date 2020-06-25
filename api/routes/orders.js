@@ -9,6 +9,7 @@ router.get('/', checkAuth,OrdersController.getAllOrder),
 router.post('/', checkAuth, OrdersController.createOrder)
 
 router.get('/:orderId', checkAuth, OrdersController.getOrderById)
+router.get('/user/:userId', checkAuth, OrdersController.getOrderByUserId)
 
 router.patch('/:orderId', checkAuth, OrdersController.fixOrder)
 

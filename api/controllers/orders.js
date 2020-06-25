@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 exports.getAllOrder = (req,res,next) => {
     Order.find()
     .populate('product')
-    .populate('userId')
+    .populate('user', '_id email')
     .exec()
     .then(docs => {
         console.log('docs', docs)
@@ -22,7 +22,8 @@ exports.getAllOrder = (req,res,next) => {
                     details: doc.details,
                     location: doc.location,
                     totalPrice: doc.totalPrice,
-                    userId: doc.userId,
+                    user: doc.user,
+                    color: doc.color,
                     request: {
                         type: 'GET',
                         url: 'http://localhost:3000/orders/' + doc.id 
@@ -55,7 +56,7 @@ exports.createOrder = (req, res, next) => {
         location: req.body.location,
         totalPrice: req.body.totalPrice,
         user: req.body.user,
-        userId: req.body.userId
+        color: req.body.color
     })
     
     order
@@ -64,7 +65,7 @@ exports.createOrder = (req, res, next) => {
             console.log(result);
             res.status(201).json({
                 message: 'Handling POST request to /order',
-                _id: mongoose.Types.ObjectId(),
+                _id: result._id ,
                 product: result.product,
                 quantity: result.quantity,
                 details: result.details,
@@ -72,6 +73,7 @@ exports.createOrder = (req, res, next) => {
                 totalPrice: result.totalPrice,
                 user: result.user,
                 userId: result.userId,
+                color: result.color,
                 request: {
                     type: 'GET',
                     url: 'http://localhost:3000/orders/' + result._id 
@@ -90,7 +92,7 @@ exports.getOrderById = (req,res,next) => {
     const id = req.params.orderId;
     Order.findById(id)
     .populate('product')
-    .populate('userId')
+    .populate('userId', '_id')
     .exec()
     .then(doc=> {
         console.log(doc)
@@ -104,7 +106,7 @@ exports.getOrderById = (req,res,next) => {
                 details: doc.details,
                 location: doc.location,
                 totalPrice: doc.totalPrice,
-                userId: doc.userId,
+                user: doc.user,
                 request: {
                     type: 'GET',
                     url: 'http://localhost:3000/orders/' 
@@ -114,6 +116,50 @@ exports.getOrderById = (req,res,next) => {
             res.status(404).json({
                 errors: true,
                 message: 'No valid entry found for provided ID'
+            })
+        }
+    }).catch(err=> {
+        console.log('err', err);
+        res.status(500).json({
+            errors: true,
+            message: err
+        })
+    })
+}
+
+exports.getOrderByUserId = (req,res, next) => {
+    const id = req.params.userId;
+    console.log('id', id)
+    Order.find({ user: id})
+    .populate('product')
+    .exec()
+    .then(docs => {
+        console.log('docs', docs)
+        if(docs.length >= 0){
+        res.status(200).json({
+            count: docs.length,
+            message: "Handling GET request to /order/user/:userId",
+            data: docs.map(doc => {
+                return{
+                    _id: doc._id,
+                    details: doc.details,
+                    product: doc.product,
+                    quantity: doc.quantity,
+                    details: doc.details,
+                    location: doc.location,
+                    totalPrice: doc.totalPrice,
+                    color: doc.color,
+                    request: {
+                        type: 'GET',
+                        url: 'http://localhost:3000/orders/' + doc.id 
+                    }
+                }
+            })
+        })
+        } else {
+            res.status(404).json({
+                errors: true,
+                message: 'No entries found'
             })
         }
     }).catch(err=> {
@@ -159,8 +205,6 @@ exports.editOrder = (req,res,next)=> {
         details: req.body.details,
         location: req.body.location,
         totalPrice: req.body.totalPrice,
-        user: req.body.user,
-        userId: req.body.userId
     }})
     .exec()
     .then(result => {

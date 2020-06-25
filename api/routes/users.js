@@ -48,6 +48,9 @@ router.post('/signin', (req,res,next) => {
                     )
                     return res.status(200).json({
                         message: "Auth successful",
+                        phoneNumber: user[0].phoneNumber,
+                        userId: user[0]._id,
+                        email: user[0].email,
                         token: token
                     })
                 }

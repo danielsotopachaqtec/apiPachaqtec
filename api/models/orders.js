@@ -7,8 +7,8 @@ const OrderSchema  = mongoose.Schema({
     details: String,
     location: String,
     totalPrice: Number,
-    user: String,
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+    color: String,
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 module.exports = mongoose.model('Order', OrderSchema);
