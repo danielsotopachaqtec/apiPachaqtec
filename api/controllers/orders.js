@@ -48,6 +48,7 @@ exports.getAllOrder = (req,res,next) => {
 }
 
 exports.createOrder = (req, res, next) => {
+    console.warn('req.body.color', req.body.color)
     const order =  new Order ({
         _id: mongoose.Types.ObjectId(),
         product: req.body.product,
@@ -135,7 +136,7 @@ exports.getOrderByUserId = (req,res, next) => {
     .exec()
     .then(docs => {
         console.log('docs', docs)
-        if(docs.length >= 0){
+        if(docs.length > 0){
         res.status(200).json({
             count: docs.length,
             message: "Handling GET request to /order/user/:userId",
